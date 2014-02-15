@@ -15,7 +15,8 @@
     "proxies-proxyipchecker": "~1.0.0",
     "proxynova": "~0.1.0",
     "scraper": "git://github.com/ivolo/scraper",
-    "mocha": "~1.17.1"
+    "mocha": "~1.17.1",
+    "should": "~3.1.2"
   },
   "dependencies": {
     "ms": "~0.6.2",

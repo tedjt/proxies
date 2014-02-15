@@ -1,5 +1,5 @@
-
 var assert = require('assert');
+var should = require('should');
 var ms = require('ms');
 var Proxies = require('..');
 var ProxyIPChecker = require('proxies-proxyipchecker');
@@ -18,17 +18,81 @@ describe('proxies', function () {
     });
   });
 
+  it.only('should be able to sort proxies accurately', function() {
+    var proxies = Proxies();
+    proxies.proxies = testData();
+    var toTest = proxies.testSort().splice(0, 50);
+    toTest.should.eql([
+      'http://190.7.157.90:8080',
+      'http://190.39.85.152:8080',
+      'http://190.78.61.203:8080',
+      'http://190.39.169.53:8080',
+      'http://190.78.79.100:8080',
+      'http://190.72.159.228:8080'
+    ]);
+  });
+
   it('should be able to get a working proxy', function (done) {
     var proxies = Proxies()
       .testEvery(ms('10s'))
       .source(proxynova)
       .source(this.proxyipchecker);
 
+    var f = proxies;
     proxies.get(function (err, proxies) {
       if (err) return done(err);
+      console.log('%j', proxies);
       assert(Array.isArray(proxies));
       assert(proxies.length > 0);
+      console.log('%j', f.proxies);
       done();
     });
   });
 });
+
+function testData() {
+  return {
+    // untested
+    "http://190.78.61.203:8080":{
+      "created":1392490312878,
+      "lastTested":false,
+      "lastSuccessful":false,
+      "latency":null
+    },
+    // tested but failed
+    "http://190.78.79.100:8080":{
+      "created":1392490312878,
+      "lastTested":1392490313497,
+      "lastSuccessful":false,
+      "latency":null
+    },
+    // older tested but failed
+    "http://190.72.159.228:8080":{
+      "created":1392490312878,
+      "lastTested":1392490320683,
+      "lastSuccessful":false,
+      "latency":null
+    },
+    // succeful low latency
+    "http://190.7.157.90:8080":{
+      "created":1392490312878,
+      "lastTested":1392490320683,
+      "lastSuccessful":1392490320683,
+      "latency":7800
+    },
+    // succesfull high latency
+    "http://190.39.85.152:8080":{
+      "created":1392490312878,
+      "lastTested":1392490321683,
+      "lastSuccessful":1392490321683,
+      "latency":8800
+    },
+    // untested two
+    "http://190.39.169.53:8080":{
+      "created":1392490312878,
+      "lastTested":false,
+      "lastSuccessful":false,
+      "latency":null
+    }
+  };
+}
