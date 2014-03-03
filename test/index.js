@@ -25,10 +25,30 @@ describe('proxies', function () {
     toTest.should.eql([
       'http://190.7.157.90:8080',
       'http://190.39.85.152:8080',
+      'http://190.7.157.92:8080',
       'http://190.78.61.203:8080',
       'http://190.39.169.53:8080',
       'http://190.78.79.100:8080',
       'http://190.72.159.228:8080'
+    ]);
+  });
+
+  it.only('should be able to filter and sort proxies accurately', function() {
+    var proxies = Proxies();
+    proxies.proxies = testData();
+    var filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
+    filtered.should.eql([
+      'http://190.7.157.90:8080',
+      "http://190.39.85.152:8080",
+      'http://190.7.157.92:8080'
+    ]);
+    // notify of failure
+    proxies.updateProxy('http://190.7.157.90:8080', false);
+    filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
+    filtered.should.eql([
+      "http://190.39.85.152:8080",
+      'http://190.7.157.92:8080',
+      'http://190.7.157.90:8080',
     ]);
   });
 
@@ -86,6 +106,13 @@ function testData() {
       "lastTested":1392490321683,
       "lastSuccessful":1392490321683,
       "latency":8800
+    },
+    // succeful low latency with failure (tested > succesful)
+    "http://190.7.157.92:8080":{
+      "created":1392490312878,
+      "lastTested":1392490320883,
+      "lastSuccessful":1392490320683,
+      "latency":600
     },
     // untested two
     "http://190.39.169.53:8080":{
