@@ -18,7 +18,7 @@ describe('proxies', function () {
     });
   });
 
-  it.only('should be able to sort proxies accurately', function() {
+  it('should be able to sort proxies accurately', function() {
     var proxies = Proxies();
     proxies.proxies = testData();
     var toTest = proxies.testSort().splice(0, 50);
@@ -33,7 +33,7 @@ describe('proxies', function () {
     ]);
   });
 
-  it.only('should be able to filter and sort proxies accurately', function() {
+  it('should be able to filter and sort proxies accurately', function() {
     var proxies = Proxies();
     proxies.proxies = testData();
     var filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
@@ -65,6 +65,21 @@ describe('proxies', function () {
       assert(Array.isArray(proxies));
       assert(proxies.length > 0);
       console.log('%j', f.proxies);
+      done();
+    });
+  });
+
+  it.only('should execute next on timeout expiration', function (done) {
+    var proxies = Proxies()
+      .testEvery(ms('1m'))
+      .source(proxynova)
+      .source(this.proxyipchecker);
+
+    var f = proxies;
+    proxies.get({timeout: 20}, function (err, proxies) {
+      if (err) return done(err);
+      console.log('%j', proxies);
+      assert(proxies.length === 0);
       done();
     });
   });
