@@ -43,7 +43,7 @@ describe('proxies', function () {
       'http://190.7.157.92:8080'
     ]);
     // notify of failure
-    proxies.updateProxy('http://190.7.157.90:8080', false);
+    proxies.update('http://190.7.157.90:8080', false);
     filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
     filtered.should.eql([
       "http://190.39.85.152:8080",
