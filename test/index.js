@@ -52,7 +52,7 @@ describe('proxies', function () {
     ]);
   });
 
-  it('should be able to get a working proxy', function (done) {
+  it.only('should be able to get a working proxy', function (done) {
     var proxies = Proxies()
       .testEvery(ms('10s'))
       .source(proxynova)
