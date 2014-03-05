@@ -69,7 +69,7 @@ describe('proxies', function () {
     });
   });
 
-  it.only('should execute next on timeout expiration', function (done) {
+  it('should execute next on timeout expiration', function (done) {
     var proxies = Proxies()
       .testEvery(ms('1m'))
       .source(proxynova)
