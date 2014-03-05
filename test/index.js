@@ -50,9 +50,34 @@ describe('proxies', function () {
       'http://190.7.157.92:8080',
       'http://190.7.157.90:8080',
     ]);
+
+    // blacklist - permanent
+    proxies.blacklist('http://190.7.157.92:8080', true);
+    filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
+    filtered.should.eql([
+      "http://190.39.85.152:8080",
+      'http://190.7.157.90:8080',
+    ]);
+
+    // blacklist - future half a second
+    proxies.blacklist('http://190.7.157.92:8080', 500, 1392490321683);
+    filtered = proxies.filter({test: {date: new Date(1392490321683)}}).splice(0, 50);
+    filtered.should.eql([
+      "http://190.39.85.152:8080",
+      'http://190.7.157.90:8080',
+    ]);
+
+    // ensure it reappers in a half second
+    filtered = proxies.filter({test: {date: new Date(1392490321683 + 600)}}).splice(0, 50);
+    filtered.should.eql([
+      "http://190.39.85.152:8080",
+      'http://190.7.157.92:8080',
+      'http://190.7.157.90:8080',
+    ]);
+
   });
 
-  it.only('should be able to get a working proxy', function (done) {
+  it('should be able to get a working proxy', function (done) {
     var proxies = Proxies()
       .testEvery(ms('10s'))
       .source(proxynova)
